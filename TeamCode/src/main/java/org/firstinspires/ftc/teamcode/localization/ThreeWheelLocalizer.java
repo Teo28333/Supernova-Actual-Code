@@ -170,6 +170,10 @@ public class ThreeWheelLocalizer implements Localizer {
             return this;
         }
 
+        public Config withEncoderDirections(double leftDirection, double rightDirection, double strafeDirection) {
+            return withMultipliers(leftDirection, rightDirection, strafeDirection);
+        }
+
         public Config withStartPose(Pose startPose) {
             this.startPose = startPose;
             return this;

@@ -7,11 +7,6 @@ public class SwerveDriveConfig {
     public final SwerveModuleConfig frontRight;
     public final SwerveModuleConfig backLeft;
     public final SwerveModuleConfig backRight;
-    public boolean predictiveBrakingEnabled = true;
-    public double maxLinearDeceleration = 40.0;
-    public double maxAngularDeceleration = Math.toRadians(360.0);
-    public double brakingDistanceBuffer = 2.0;
-    public double minimumBrakeScale = 0.12;
     public boolean centripetalCorrectionEnabled = true;
     public double centripetalCorrectionScale = 0.0;
     public boolean xLockEnabled = true;
@@ -24,31 +19,6 @@ public class SwerveDriveConfig {
         this.frontRight = frontRight;
         this.backLeft = backLeft;
         this.backRight = backRight;
-    }
-
-    public SwerveDriveConfig withPredictiveBraking(boolean enabled) {
-        predictiveBrakingEnabled = enabled;
-        return this;
-    }
-
-    public SwerveDriveConfig withMaxLinearDeceleration(double maxLinearDeceleration) {
-        this.maxLinearDeceleration = maxLinearDeceleration;
-        return this;
-    }
-
-    public SwerveDriveConfig withMaxAngularDeceleration(double maxAngularDeceleration) {
-        this.maxAngularDeceleration = maxAngularDeceleration;
-        return this;
-    }
-
-    public SwerveDriveConfig withBrakingDistanceBuffer(double brakingDistanceBuffer) {
-        this.brakingDistanceBuffer = brakingDistanceBuffer;
-        return this;
-    }
-
-    public SwerveDriveConfig withMinimumBrakeScale(double minimumBrakeScale) {
-        this.minimumBrakeScale = minimumBrakeScale;
-        return this;
     }
 
     public SwerveDriveConfig withCentripetalCorrection(boolean enabled) {

@@ -227,11 +227,6 @@ public class SwerveAutonTuningConfig {
         )
                 .withXLock(X_LOCK_ENABLED)
                 .withXLockDeadband(X_LOCK_DEADBAND)
-                .withPredictiveBraking(false)
-                .withMaxLinearDeceleration(MAX_LINEAR_DECELERATION)
-                .withMaxAngularDeceleration(Math.toRadians(MAX_ANGULAR_DECELERATION_DEGREES))
-                .withBrakingDistanceBuffer(BRAKING_DISTANCE_BUFFER)
-                .withMinimumBrakeScale(MINIMUM_BRAKE_SCALE)
                 .withCentripetalCorrection(CENTRIPETAL_CORRECTION_ENABLED)
                 .withCentripetalCorrectionScale(CENTRIPETAL_CORRECTION_SCALE)
                 .withBrakeMode(BRAKE_MODE_ENABLED);

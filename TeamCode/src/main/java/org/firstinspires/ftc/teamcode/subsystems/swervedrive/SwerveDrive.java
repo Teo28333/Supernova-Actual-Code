@@ -58,19 +58,17 @@ public class SwerveDrive implements Drivetrain {
     }
 
     public void driveFieldCentricWithBraking(Pose driveCommand, Pose targetPose) {
-        Pose scaledCommand = applyPredictiveBraking(driveCommand, targetPose);
-        driveFieldCentric(scaledCommand);
+        driveFieldCentric(driveCommand);
     }
 
     public void driveFieldCentricWithBraking(Pose driveCommand, Pose currentPose,
                                              Pose velocity, Pose targetPose) {
-        Pose scaledCommand = applyPredictiveBraking(driveCommand, currentPose, velocity, targetPose);
-        driveFieldCentric(scaledCommand, currentPose.getHeading());
+        driveFieldCentric(driveCommand, currentPose.getHeading());
     }
 
     @Override
     public void driveFieldCentric(Pose driveCommand, Pose currentPose, Pose velocity, Pose targetPose) {
-        driveFieldCentricWithBraking(driveCommand, currentPose, velocity, targetPose);
+        driveFieldCentric(driveCommand, currentPose.getHeading());
     }
 
     public void driveRobotCentric(double forward, double strafe, double rotate) {
@@ -165,39 +163,6 @@ public class SwerveDrive implements Drivetrain {
         }
     }
 
-    public Pose applyPredictiveBraking(Pose driveCommand, Pose targetPose) {
-        if (config == null || !config.predictiveBrakingEnabled) {
-            return driveCommand.copy();
-        }
-
-        Pose currentPose = localizer.getPose();
-        Pose velocity = localizer.getVelocity();
-        return applyPredictiveBraking(driveCommand, currentPose, velocity, targetPose);
-    }
-
-    public Pose applyPredictiveBraking(Pose driveCommand, Pose currentPose,
-                                       Pose velocity, Pose targetPose) {
-        if (config == null || !config.predictiveBrakingEnabled) {
-            return driveCommand.copy();
-        }
-
-        double distanceToTarget = currentPose.distanceTo(targetPose);
-        double linearVelocity = Math.hypot(velocity.getX(), velocity.getY());
-        double linearStoppingDistance = calculateStoppingDistance(linearVelocity, config.maxLinearDeceleration);
-        double translationScale = calculateBrakeScale(distanceToTarget, linearStoppingDistance);
-
-        double headingError = Math.abs(currentPose.headingErrorTo(targetPose));
-        double angularVelocity = Math.abs(velocity.getHeading());
-        double angularStoppingDistance = calculateStoppingDistance(angularVelocity, config.maxAngularDeceleration);
-        double rotationScale = calculateBrakeScale(headingError, angularStoppingDistance);
-
-        return new Pose(
-                driveCommand.getX() * translationScale,
-                driveCommand.getY() * translationScale,
-                driveCommand.getHeading() * rotationScale
-        );
-    }
-
     private static SwervePods createPod(HardwareMap hardwareMap, SwerveModuleConfig config) {
         SwervePods pod = new SwervePods(
                 hardwareMap,
@@ -227,24 +192,6 @@ public class SwerveDrive implements Drivetrain {
         }
 
         return radius == 0.0 ? 1.0 : radius;
-    }
-
-    private double calculateBrakeScale(double remainingDistance, double stoppingDistance) {
-        double brakingDistance = stoppingDistance + config.brakingDistanceBuffer;
-
-        if (brakingDistance <= 0.0 || remainingDistance >= brakingDistance) {
-            return 1.0;
-        }
-
-        return Range.clip(remainingDistance / brakingDistance, config.minimumBrakeScale, 1.0);
-    }
-
-    private static double calculateStoppingDistance(double velocity, double maxDeceleration) {
-        if (maxDeceleration <= 0.0) {
-            return 0.0;
-        }
-
-        return (velocity * velocity) / (2.0 * maxDeceleration);
     }
 
     private boolean shouldXLock(double forward, double strafe, double rotate) {

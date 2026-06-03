@@ -21,7 +21,7 @@ public class SupernovaConfig {
     public PinpointLocalizer.Config localizerConfig = new PinpointLocalizer.Config();
     public SwerveDriveConfig swerveDriveConfig;
     public MecanumDriveConfig mecanumDriveConfig;
-    public FollowerConfig followerConfig = new FollowerConfig();
+    public FollowerConfig followerConfig = Config.follower();
 
     private LocalizerFactory localizerFactory;
     private DrivetrainFactory drivetrainFactory;

@@ -16,8 +16,7 @@ public class TeleOpSwerveConfig {
     }
 
     public static SwerveDriveConfig swerveDrive() {
-        return SwerveAutonTuningConfig.swerveDrive()
-                .withPredictiveBraking(false);
+        return SwerveAutonTuningConfig.swerveDrive();
     }
 
     private static SwerveModuleConfig module(String driveMotorName, String turnServoName,
