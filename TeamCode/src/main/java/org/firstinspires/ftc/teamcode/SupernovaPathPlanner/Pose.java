@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pathplanner;
+package org.firstinspires.ftc.teamcode.SupernovaPathPlanner;
 
 public class Pose {
     private double x;

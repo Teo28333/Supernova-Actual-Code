@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.pathplanner.Pose;
+import org.firstinspires.ftc.teamcode.SupernovaPathPlanner.Pose;
 
 public class SwervePods {
     private static final double TWO_PI = 2.0 * Math.PI;

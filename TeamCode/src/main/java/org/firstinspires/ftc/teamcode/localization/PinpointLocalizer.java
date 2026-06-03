@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
-import org.firstinspires.ftc.teamcode.pathplanner.Pose;
+import org.firstinspires.ftc.teamcode.SupernovaPathPlanner.Pose;
 
 public class PinpointLocalizer implements Localizer {
     private final GoBildaPinpointDriver pinpoint;

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pathplanner;
+package org.firstinspires.ftc.teamcode.SupernovaPathPlanner;
 
 public interface PathSegment {
     Pose get(double t);

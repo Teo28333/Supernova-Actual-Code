@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.localization.Localizer;
-import org.firstinspires.ftc.teamcode.pathplanner.Pose;
+import org.firstinspires.ftc.teamcode.SupernovaPathPlanner.Pose;
 
 public class SwerveDrive {
     private final SwervePods[] pods;

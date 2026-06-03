@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pathplanner;
+package org.firstinspires.ftc.teamcode.SupernovaPathPlanner;
 
 import java.util.ArrayList;
 import java.util.Collections;

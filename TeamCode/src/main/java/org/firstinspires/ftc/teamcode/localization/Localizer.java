@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.localization;
 
-import org.firstinspires.ftc.teamcode.pathplanner.Pose;
+import org.firstinspires.ftc.teamcode.SupernovaPathPlanner.Pose;
 
 public interface Localizer {
     void update();

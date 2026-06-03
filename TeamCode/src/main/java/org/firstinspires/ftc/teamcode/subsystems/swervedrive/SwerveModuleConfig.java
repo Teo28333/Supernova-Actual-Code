@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.swervedrive;
 
-import org.firstinspires.ftc.teamcode.pathplanner.Pose;
+import org.firstinspires.ftc.teamcode.SupernovaPathPlanner.Pose;
 
 public class SwerveModuleConfig {
     public final String driveMotorName;
