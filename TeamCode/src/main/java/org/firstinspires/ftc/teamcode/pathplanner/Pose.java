@@ -72,7 +72,7 @@ public class Pose {
     }
 
     public Pose copy() {
-        return new Pose(this);
+        return new Pose(x, y, heading);
     }
 
     public Pose withX(double x) {
