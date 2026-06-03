@@ -4,37 +4,37 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PedroPath {
+public class SupernovaPath {
     private final List<PathSegment> segments = new ArrayList<>();
     private Pose currentPose = null;
 
-    public PedroPath startAt(Pose pose) {
+    public SupernovaPath startAt(Pose pose) {
         currentPose = pose.copy();
         return this;
     }
 
-    public PedroPath add(PathSegment segment) {
+    public SupernovaPath add(PathSegment segment) {
         segments.add(segment);
         currentPose = segment.get(1.0);
         return this;
     }
 
-    public PedroPath lineTo(Pose start, Pose end) {
-        return add(new PedroLine(start, end));
+    public SupernovaPath lineTo(Pose start, Pose end) {
+        return add(new SupernovaLine(start, end));
     }
 
-    public PedroPath lineTo(Pose end) {
+    public SupernovaPath lineTo(Pose end) {
         requireStartPose();
-        return add(new PedroLine(currentPose, end));
+        return add(new SupernovaLine(currentPose, end));
     }
 
-    public PedroPath curveTo(Pose start, Pose controlOne, Pose controlTwo, Pose end) {
-        return add(new PedroCurve(start, controlOne, controlTwo, end));
+    public SupernovaPath curveTo(Pose start, Pose controlOne, Pose controlTwo, Pose end) {
+        return add(new SupernovaCurve(start, controlOne, controlTwo, end));
     }
 
-    public PedroPath curveTo(Pose controlOne, Pose controlTwo, Pose end) {
+    public SupernovaPath curveTo(Pose controlOne, Pose controlTwo, Pose end) {
         requireStartPose();
-        return add(new PedroCurve(currentPose, controlOne, controlTwo, end));
+        return add(new SupernovaCurve(currentPose, controlOne, controlTwo, end));
     }
 
     public PathSegment get(int index) {
@@ -52,8 +52,8 @@ public class PedroPath {
     public Pose getStartPose() {
         if (segments.isEmpty()) {
             return new Pose();
-        }
 
+        }
         return segments.get(0).get(0.0);
     }
 

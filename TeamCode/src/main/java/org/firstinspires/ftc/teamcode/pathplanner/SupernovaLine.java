@@ -2,12 +2,12 @@ package org.firstinspires.ftc.teamcode.pathplanner;
 
 import com.qualcomm.robotcore.util.Range;
 
-public class PedroLine implements PathSegment {
+public class SupernovaLine implements PathSegment {
     private final Pose start;
     private final Pose end;
     private final double length;
 
-    public PedroLine(Pose start, Pose end) {
+    public SupernovaLine(Pose start, Pose end) {
         this.start = start.copy();
         this.end = end.copy();
         this.length = start.distanceTo(end);

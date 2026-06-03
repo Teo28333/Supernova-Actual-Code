@@ -13,7 +13,7 @@ public class PathPlaner {
     private final SwerveDrive drive;
     private final Localizer localizer;
     private Config config = new Config();
-    private PedroPath path;
+    private SupernovaPath path;
     private int segmentIndex = 0;
     private double segmentT = 0.0;
     private Pose targetPose = new Pose();
@@ -34,11 +34,11 @@ public class PathPlaner {
         this.config = config;
     }
 
-    public void followPath(PedroPath path) {
+    public void followPath(SupernovaPath path) {
         followPath(path, false);
     }
 
-    public void followPath(PedroPath path, boolean resetPose) {
+    public void followPath(SupernovaPath path, boolean resetPose) {
         if (path == null || path.size() == 0) {
             throw new IllegalArgumentException("Path must contain at least one segment.");
         }

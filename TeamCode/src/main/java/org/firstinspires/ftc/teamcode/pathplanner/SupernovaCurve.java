@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.pathplanner;
 
 import com.qualcomm.robotcore.util.Range;
 
-public class PedroCurve implements PathSegment {
+public class SupernovaCurve implements PathSegment {
     private static final int LENGTH_SAMPLES = 40;
 
     private final Pose start;
@@ -11,7 +11,7 @@ public class PedroCurve implements PathSegment {
     private final Pose end;
     private final double length;
 
-    public PedroCurve(Pose start, Pose controlOne, Pose controlTwo, Pose end) {
+    public SupernovaCurve(Pose start, Pose controlOne, Pose controlTwo, Pose end) {
         this.start = start.copy();
         this.controlOne = controlOne.copy();
         this.controlTwo = controlTwo.copy();
