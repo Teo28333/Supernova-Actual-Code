@@ -12,7 +12,11 @@ import org.firstinspires.ftc.teamcode.pathplanner.Pose;
 public class SwervePods {
     private static final double TWO_PI = 2.0 * Math.PI;
     private static final double DEFAULT_TURN_KP = 1.8;
+    private static final double DEFAULT_TURN_KI = 0.0;
+    private static final double DEFAULT_TURN_KD = 0.0;
+    private static final double DEFAULT_TURN_KF = 0.0;
     private static final double DEFAULT_TURN_TOLERANCE_RADIANS = Math.toRadians(2.0);
+    private static final double DEFAULT_INTEGRAL_LIMIT = 0.5;
 
     private final DcMotorEx driveMotor;
     private final CRServo turnMotor;
@@ -23,9 +27,17 @@ public class SwervePods {
     private double podPoseX = 0.0;
     private double podPoseY = 0.0;
     private double turnKp = DEFAULT_TURN_KP;
+    private double turnKi = DEFAULT_TURN_KI;
+    private double turnKd = DEFAULT_TURN_KD;
+    private double turnKf = DEFAULT_TURN_KF;
     private double turnToleranceRadians = DEFAULT_TURN_TOLERANCE_RADIANS;
+    private double integralLimit = DEFAULT_INTEGRAL_LIMIT;
+    private double integralSum = 0.0;
+    private double lastAngleError = 0.0;
+    private long lastPidTimeNanos = 0L;
     private double lastTargetAngle = 0.0;
     private double lastDrivePower = 0.0;
+    private double lastTurnPower = 0.0;
 
     public SwervePods(HardwareMap hwm, String motorName, String servoName, String encoderName,
                        double angleOffset, double minVoltage, double maxVoltage) {
@@ -66,8 +78,35 @@ public class SwervePods {
         this.turnKp = turnKp;
     }
 
+    public void setTurnPid(double kP, double kI, double kD) {
+        setTurnPidf(kP, kI, kD, turnKf);
+    }
+
+    public void setTurnPidf(double kP, double kI, double kD, double kF) {
+        this.turnKp = kP;
+        this.turnKi = kI;
+        this.turnKd = kD;
+        this.turnKf = kF;
+        resetTurnController();
+    }
+
+    public void setTurnKf(double turnKf) {
+        this.turnKf = turnKf;
+    }
+
     public void setTurnToleranceRadians(double turnToleranceRadians) {
         this.turnToleranceRadians = Math.abs(turnToleranceRadians);
+    }
+
+    public void setIntegralLimit(double integralLimit) {
+        this.integralLimit = Math.abs(integralLimit);
+    }
+
+    public void resetTurnController() {
+        integralSum = 0.0;
+        lastAngleError = 0.0;
+        lastPidTimeNanos = 0L;
+        lastTurnPower = 0.0;
     }
 
     public void setDriveReversed(boolean reversed) {
@@ -101,6 +140,14 @@ public class SwervePods {
         return lastDrivePower;
     }
 
+    public double getLastTurnPower() {
+        return lastTurnPower;
+    }
+
+    public double getLastAngleError() {
+        return lastAngleError;
+    }
+
     public void setTargetState(double drivePower, double targetAngle) {
         double currentAngle = getCurrentAngle();
         double optimizedDrivePower = drivePower;
@@ -113,12 +160,11 @@ public class SwervePods {
             angleError = Pose.normalizeRadians(optimizedTargetAngle - currentAngle);
         }
 
-        double turnPower = Math.abs(angleError) <= turnToleranceRadians
-                ? 0.0
-                : Range.clip(angleError * turnKp, -1.0, 1.0);
+        double turnPower = calculateTurnPower(angleError);
 
         lastTargetAngle = optimizedTargetAngle;
         lastDrivePower = Range.clip(optimizedDrivePower, -1.0, 1.0);
+        lastTurnPower = turnPower;
 
         turnMotor.setPower(turnPower);
         driveMotor.setPower(lastDrivePower);
@@ -128,6 +174,38 @@ public class SwervePods {
         driveMotor.setPower(0.0);
         turnMotor.setPower(0.0);
         lastDrivePower = 0.0;
+        resetTurnController();
+    }
+
+    private double calculateTurnPower(double angleError) {
+        long now = System.nanoTime();
+
+        if (Math.abs(angleError) <= turnToleranceRadians) {
+            resetTurnController();
+            lastAngleError = angleError;
+            return 0.0;
+        }
+
+        double dt = lastPidTimeNanos == 0L
+                ? 0.0
+                : (now - lastPidTimeNanos) / 1_000_000_000.0;
+
+        if (dt > 0.0) {
+            integralSum += angleError * dt;
+            integralSum = Range.clip(integralSum, -integralLimit, integralLimit);
+        }
+
+        double derivative = dt > 0.0 ? (angleError - lastAngleError) / dt : 0.0;
+        double feedForward = turnKf == 0.0 ? 0.0 : Math.copySign(turnKf, angleError);
+        double turnPower = (turnKp * angleError)
+                + (turnKi * integralSum)
+                + (turnKd * derivative)
+                + feedForward;
+
+        lastAngleError = angleError;
+        lastPidTimeNanos = now;
+
+        return Range.clip(turnPower, -1.0, 1.0);
     }
 
 }

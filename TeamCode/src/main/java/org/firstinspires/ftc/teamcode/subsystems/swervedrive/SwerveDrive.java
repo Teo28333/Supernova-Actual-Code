@@ -19,7 +19,7 @@ public class SwerveDrive {
         this.driveRadius = calculateDriveRadius(pods);
     }
 
-    public SwerveDrive(HardwareMap hardwareMap, Localizer localizer, Config config) {
+    public SwerveDrive(HardwareMap hardwareMap, Localizer localizer, SwerveDriveConfig config) {
         this(
                 createPod(hardwareMap, config.frontLeft),
                 createPod(hardwareMap, config.frontRight),
@@ -30,8 +30,6 @@ public class SwerveDrive {
     }
 
     public void driveFieldCentric(double forward, double strafe, double rotate) {
-        localizer.update();
-
         double heading = localizer.getPose().getHeading();
         double cos = Math.cos(heading);
         double sin = Math.sin(heading);
@@ -84,7 +82,7 @@ public class SwerveDrive {
         }
     }
 
-    private static SwervePods createPod(HardwareMap hardwareMap, ModuleConfig config) {
+    private static SwervePods createPod(HardwareMap hardwareMap, SwerveModuleConfig config) {
         SwervePods pod = new SwervePods(
                 hardwareMap,
                 config.driveMotorName,
@@ -96,8 +94,9 @@ public class SwerveDrive {
         );
 
         pod.setPodPose(config.modulePose);
-        pod.setTurnKp(config.turnKp);
+        pod.setTurnPidf(config.turnKp, config.turnKi, config.turnKd, config.turnKf);
         pod.setTurnToleranceRadians(config.turnToleranceRadians);
+        pod.setIntegralLimit(config.turnIntegralLimit);
         pod.setDriveReversed(config.driveReversed);
         pod.setTurnReversed(config.turnReversed);
 
@@ -112,74 +111,6 @@ public class SwerveDrive {
         }
 
         return radius == 0.0 ? 1.0 : radius;
-    }
-
-    public static class Config {
-        public final ModuleConfig frontLeft;
-        public final ModuleConfig frontRight;
-        public final ModuleConfig backLeft;
-        public final ModuleConfig backRight;
-
-        public Config(ModuleConfig frontLeft, ModuleConfig frontRight,
-                      ModuleConfig backLeft, ModuleConfig backRight) {
-            this.frontLeft = frontLeft;
-            this.frontRight = frontRight;
-            this.backLeft = backLeft;
-            this.backRight = backRight;
-        }
-    }
-
-    public static class ModuleConfig {
-        public final String driveMotorName;
-        public final String turnServoName;
-        public final String absoluteEncoderName;
-        public final Pose modulePose;
-        public double angleOffset = 0.0;
-        public double minVoltage = 0.0;
-        public double maxVoltage = 3.3;
-        public double turnKp = 1.8;
-        public double turnToleranceRadians = Math.toRadians(2.0);
-        public boolean driveReversed = false;
-        public boolean turnReversed = false;
-
-        public ModuleConfig(String driveMotorName, String turnServoName,
-                            String absoluteEncoderName, Pose modulePose) {
-            this.driveMotorName = driveMotorName;
-            this.turnServoName = turnServoName;
-            this.absoluteEncoderName = absoluteEncoderName;
-            this.modulePose = modulePose;
-        }
-
-        public ModuleConfig withAngleOffset(double angleOffset) {
-            this.angleOffset = angleOffset;
-            return this;
-        }
-
-        public ModuleConfig withVoltageRange(double minVoltage, double maxVoltage) {
-            this.minVoltage = minVoltage;
-            this.maxVoltage = maxVoltage;
-            return this;
-        }
-
-        public ModuleConfig withTurnKp(double turnKp) {
-            this.turnKp = turnKp;
-            return this;
-        }
-
-        public ModuleConfig withTurnToleranceRadians(double turnToleranceRadians) {
-            this.turnToleranceRadians = turnToleranceRadians;
-            return this;
-        }
-
-        public ModuleConfig withDriveReversed(boolean driveReversed) {
-            this.driveReversed = driveReversed;
-            return this;
-        }
-
-        public ModuleConfig withTurnReversed(boolean turnReversed) {
-            this.turnReversed = turnReversed;
-            return this;
-        }
     }
 
 }

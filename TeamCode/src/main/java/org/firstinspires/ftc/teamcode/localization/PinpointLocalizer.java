@@ -88,6 +88,7 @@ public class PinpointLocalizer implements Localizer {
 
     @Override
     public Pose getPose() {
+        update();
         return pose.copy();
     }
 

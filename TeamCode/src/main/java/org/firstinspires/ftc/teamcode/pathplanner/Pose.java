@@ -1,15 +1,9 @@
 package org.firstinspires.ftc.teamcode.pathplanner;
 
-import java.util.Objects;
-
 public class Pose {
     private double x;
     private double y;
     private double heading;
-
-    public Pose() {
-        this(0.0, 0.0, 0.0);
-    }
 
     /**
      * Create a pose in field coordinates.
@@ -23,6 +17,10 @@ public class Pose {
         this.x = x;
         this.y = y;
         this.heading = heading;
+    }
+
+    public Pose() {
+        this(0.0, 0.0, 0.0);
     }
 
     public Pose(Pose pose) {
