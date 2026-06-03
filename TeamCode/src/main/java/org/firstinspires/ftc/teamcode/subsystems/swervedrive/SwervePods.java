@@ -113,6 +113,10 @@ public class SwervePods {
         driveMotor.setDirection(reversed ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
     }
 
+    public void setDriveZeroPowerBehavior(DcMotor.ZeroPowerBehavior zeroPowerBehavior) {
+        driveMotor.setZeroPowerBehavior(zeroPowerBehavior);
+    }
+
     public void setTurnReversed(boolean reversed) {
         turnMotor.setDirection(reversed ? CRServo.Direction.REVERSE : CRServo.Direction.FORWARD);
     }
@@ -146,6 +150,10 @@ public class SwervePods {
 
     public double getLastAngleError() {
         return lastAngleError;
+    }
+
+    public void pointAt(double targetAngle) {
+        setTargetState(0.0, targetAngle);
     }
 
     public void setTargetState(double drivePower, double targetAngle) {

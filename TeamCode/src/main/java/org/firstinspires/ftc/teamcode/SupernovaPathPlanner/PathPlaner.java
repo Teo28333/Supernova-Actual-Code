@@ -57,7 +57,7 @@ public class PathPlaner {
 
     public void update() {
         localizer.update();
-        pose = localizer.getPose();
+        pose = localizer.getPoseEstimate();
 
         if (!busy || path == null) {
             drive.stop();

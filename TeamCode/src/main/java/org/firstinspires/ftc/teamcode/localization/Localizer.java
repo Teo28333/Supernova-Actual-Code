@@ -7,7 +7,15 @@ public interface Localizer {
 
     Pose getPose();
 
+    default Pose getPoseEstimate() {
+        return getPose();
+    }
+
     Pose getVelocity();
 
     void setPose(Pose pose);
+
+    default void setStartingPose(Pose pose) {
+        setPose(pose);
+    }
 }

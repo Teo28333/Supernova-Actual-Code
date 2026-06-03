@@ -1,12 +1,16 @@
 package org.firstinspires.ftc.teamcode.SupernovaPathPlanner;
 
+import org.firstinspires.ftc.teamcode.SupernovaPathPlanner.callbacks.PathCallback;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class SupernovaPath {
     private final List<PathSegment> segments = new ArrayList<>();
+    private final List<PathCallback> callbacks = new ArrayList<>();
     private Pose currentPose = null;
+    private PathConstraints constraints = null;
 
     public SupernovaPath startAt(Pose pose) {
         currentPose = pose.copy();
@@ -16,6 +20,16 @@ public class SupernovaPath {
     public SupernovaPath add(PathSegment segment) {
         segments.add(segment);
         currentPose = segment.get(1.0);
+        return this;
+    }
+
+    public SupernovaPath addCallback(PathCallback callback) {
+        callbacks.add(callback);
+        return this;
+    }
+
+    public SupernovaPath setConstraints(PathConstraints constraints) {
+        this.constraints = constraints;
         return this;
     }
 
@@ -49,6 +63,14 @@ public class SupernovaPath {
         return Collections.unmodifiableList(segments);
     }
 
+    public List<PathCallback> getCallbacks() {
+        return Collections.unmodifiableList(callbacks);
+    }
+
+    public PathConstraints getConstraints() {
+        return constraints;
+    }
+
     public Pose getStartPose() {
         if (segments.isEmpty()) {
             return new Pose();
@@ -63,6 +85,16 @@ public class SupernovaPath {
         }
 
         return segments.get(segments.size() - 1).get(1.0);
+    }
+
+    public double length() {
+        double length = 0.0;
+
+        for (PathSegment segment : segments) {
+            length += segment.length();
+        }
+
+        return length;
     }
 
     private void requireStartPose() {

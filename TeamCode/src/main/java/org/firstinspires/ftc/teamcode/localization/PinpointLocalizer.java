@@ -93,7 +93,7 @@ public class PinpointLocalizer implements Localizer {
     }
 
     public Pose getPoseEstimate() {
-        return getPose();
+        return pose.copy();
     }
 
     public Pose getRawPose() {
@@ -194,6 +194,10 @@ public class PinpointLocalizer implements Localizer {
     }
 
     public void setPoseEstimate(Pose pose) {
+        setPose(pose);
+    }
+
+    public void setStartingPose(Pose pose) {
         setPose(pose);
     }
 
