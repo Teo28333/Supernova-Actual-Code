@@ -12,7 +12,7 @@ public class Pose {
     }
 
     /**
-     * Create a pose in field coordinates (Pedro coordinate system).
+     * Create a pose in field coordinates.
      *
      * @param x x coordinate in inches
      * @param y y coordinate in inches
