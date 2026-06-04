@@ -10,6 +10,9 @@ import org.firstinspires.ftc.teamcode.SupernovaPathPlanner.callbacks.PathCallbac
 import org.firstinspires.ftc.teamcode.localization.Localizer;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.Drivetrain;
 
+/**
+ * Documentation ajoutee: Suiveur de trajectoire qui choisit un point cible, applique PIDF et commande le drivetrain.
+ */
 public class Follower {
     private static final int CLOSEST_POINT_SAMPLES = 80;
 
@@ -33,6 +36,7 @@ public class Follower {
     private PIDFController translationYController;
     private PIDFController headingController;
 
+    // Construit cette classe avec les dependances et reglages necessaires.
     public Follower(SupernovaConfig config, HardwareMap hardwareMap) {
         Follower follower = config.createFollower(hardwareMap);
         this.drivetrain = follower.drivetrain;
@@ -41,6 +45,7 @@ public class Follower {
         configureControllers();
     }
 
+    // Construit cette classe avec les dependances et reglages necessaires.
     public Follower(Drivetrain drivetrain, Localizer localizer, FollowerConfig config) {
         this.drivetrain = drivetrain;
         this.localizer = localizer;
@@ -48,15 +53,18 @@ public class Follower {
         configureControllers();
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public void setConfig(FollowerConfig config) {
         this.config = config;
         configureControllers();
     }
 
+    // Ajoute ou lance une etape de trajectoire dans l'API de path planning.
     public PathBuilder pathBuilder() {
         return new PathBuilder();
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public void setStartingPose(Pose pose) {
         localizer.setStartingPose(pose);
         this.pose = pose.copy();
@@ -64,10 +72,12 @@ public class Follower {
         resetControllers();
     }
 
+    // Ajoute ou lance une etape de trajectoire dans l'API de path planning.
     public void followPath(SupernovaPath path) {
         followPath(path, false);
     }
 
+    // Ajoute ou lance une etape de trajectoire dans l'API de path planning.
     public void followPath(SupernovaPath path, boolean resetPose) {
         if (path == null || path.size() == 0) {
             throw new IllegalArgumentException("Path must contain at least one segment.");
@@ -91,10 +101,12 @@ public class Follower {
         }
     }
 
+    // Ajoute ou lance une etape de trajectoire dans l'API de path planning.
     public void followPathChain(PathChain pathChain) {
         followPathChain(pathChain, false);
     }
 
+    // Ajoute ou lance une etape de trajectoire dans l'API de path planning.
     public void followPathChain(PathChain pathChain, boolean resetPose) {
         if (pathChain == null || pathChain.size() == 0) {
             throw new IllegalArgumentException("Path chain must contain at least one path.");
@@ -118,10 +130,12 @@ public class Follower {
         }
     }
 
+    // Ajoute ou lance une etape de trajectoire dans l'API de path planning.
     public void holdPoint(Pose pose) {
         holdPoint(pose, false);
     }
 
+    // Ajoute ou lance une etape de trajectoire dans l'API de path planning.
     public void holdPoint(Pose pose, boolean resetPose) {
         this.holdPose = pose.copy();
         this.targetPose = pose.copy();
@@ -138,11 +152,13 @@ public class Follower {
         }
     }
 
+    // Ajoute ou lance une etape de trajectoire dans l'API de path planning.
     public void turnTo(double headingRadians) {
         Pose currentPose = localizer.getPose();
         holdPoint(currentPose.withHeading(headingRadians));
     }
 
+    // Rafraichit les lectures, calcule les erreurs et met a jour l'etat interne.
     public void update() {
         localizer.update();
         pose = localizer.getPoseEstimate();
@@ -206,6 +222,7 @@ public class Follower {
         drivetrain.driveFieldCentric(driveCommand, pose, velocity, endPose);
     }
 
+    // Arrete proprement les moteurs et remet les commandes a zero.
     public void stop() {
         busy = false;
         holdingPoint = false;
@@ -213,46 +230,57 @@ public class Follower {
         drivetrain.stop();
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public boolean isBusy() {
         return busy;
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public Pose getPose() {
         return pose.copy();
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public Pose getVelocity() {
         return velocity.copy();
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public Pose getTargetPose() {
         return targetPose.copy();
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public Pose getDriveCommand() {
         return driveCommand.copy();
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public int getSegmentIndex() {
         return segmentIndex;
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public int getPathIndex() {
         return pathIndex;
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public double getSegmentT() {
         return segmentT;
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public Drivetrain getDrivetrain() {
         return drivetrain;
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public Drivetrain getDrive() {
         return drivetrain;
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public Localizer getLocalizer() {
         return localizer;
     }
@@ -328,6 +356,7 @@ public class Follower {
         );
     }
 
+    // Calcule une valeur intermediaire utilisee pour limiter ou corriger la commande.
     private Pose calculateCentripetalCorrection(PathSegment segment, double t, Pose velocity) {
         if (!config.centripetalCorrectionEnabled || config.centripetalCorrectionScale == 0.0) {
             return new Pose();
@@ -366,6 +395,7 @@ public class Follower {
         );
     }
 
+    // Calcule une valeur intermediaire utilisee pour limiter ou corriger la commande.
     private static Pose clampDriveCommand(Pose command, PathConstraints activeConstraints, boolean atEndSegment) {
         double maxTranslationPower = atEndSegment
                 ? activeConstraints.maxFinalTranslationPower
@@ -387,6 +417,7 @@ public class Follower {
         );
     }
 
+    // Calcule une valeur intermediaire utilisee pour limiter ou corriger la commande.
     private static double findClosestT(PathSegment segment, Pose pose, double startT) {
         double bestT = Range.clip(startT, 0.0, 1.0);
         double bestDistance = Double.POSITIVE_INFINITY;
@@ -404,6 +435,7 @@ public class Follower {
         return bestT;
     }
 
+    // Section de logique dediee a cette responsabilite precise de la classe.
     private void configureControllers() {
         PIDFCoefficients translationCoefficients = config.getTranslationalPidf();
         PIDFCoefficients headingCoefficients = config.getTurnPidf();
@@ -420,12 +452,14 @@ public class Follower {
         headingController.setOutputBounds(-config.maxHeadingPower, config.maxHeadingPower);
     }
 
+    // Remet l'etat interne a une base propre pour eviter les anciennes erreurs accumulees.
     private void resetControllers() {
         translationXController.reset();
         translationYController.reset();
         headingController.reset();
     }
 
+    // Rafraichit les lectures, calcule les erreurs et met a jour l'etat interne.
     private void updateHoldPoint() {
         targetPose = holdPose.copy();
         PathConstraints constraints = new PathConstraints(config);
@@ -434,6 +468,7 @@ public class Follower {
         drivetrain.driveFieldCentric(driveCommand, pose, velocity, holdPose);
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     private PathConstraints getActiveConstraints() {
         if (path != null && path.getConstraints() != null) {
             return path.getConstraints();
@@ -442,6 +477,7 @@ public class Follower {
         return new PathConstraints(config);
     }
 
+    // Rafraichit les lectures, calcule les erreurs et met a jour l'etat interne.
     private void updateCallbacks() {
         double elapsedSeconds = (System.nanoTime() - followStartTimeNanos) / 1_000_000_000.0;
 

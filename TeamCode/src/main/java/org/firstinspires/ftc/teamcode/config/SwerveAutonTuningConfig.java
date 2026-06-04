@@ -15,6 +15,9 @@ import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumDriveConfig;
 import org.firstinspires.ftc.teamcode.subsystems.swervedrive.SwerveDriveConfig;
 import org.firstinspires.ftc.teamcode.subsystems.swervedrive.SwerveModuleConfig;
 
+/**
+ * Documentation ajoutee: Configuration Dashboard centrale pour choisir le mode de tuning, le drivetrain et les gains.
+ */
 @Config
 public class SwerveAutonTuningConfig {
     public static final double FIELD_MIN_X = 0.0;
@@ -168,6 +171,7 @@ public class SwerveAutonTuningConfig {
     public static double POSITION_TOLERANCE = 1.0;
     public static double HEADING_TOLERANCE_DEGREES = 3.0;
 
+    // Fabrique l'objet configure qui sera utilise par l'OpMode ou le follower.
     public static PinpointLocalizer.Config pinpoint() {
         return new PinpointLocalizer.Config()
                 .withPodOffsets(PINPOINT_X_OFFSET_INCHES, PINPOINT_Y_OFFSET_INCHES, DistanceUnit.INCH)
@@ -181,6 +185,7 @@ public class SwerveAutonTuningConfig {
                 .withYawScalar(USE_LOCALIZER_YAW_SCALAR ? LOCALIZER_YAW_SCALAR : 1.0);
     }
 
+    // Fabrique l'objet configure qui sera utilise par l'OpMode ou le follower.
     public static ThreeWheelLocalizer.Config threeWheel() {
         return new ThreeWheelLocalizer.Config()
                 .withEncoderNames(THREE_WHEEL_LEFT_ENCODER, THREE_WHEEL_RIGHT_ENCODER, THREE_WHEEL_STRAFE_ENCODER)
@@ -194,6 +199,7 @@ public class SwerveAutonTuningConfig {
                 .withStartPose(startingPose());
     }
 
+    // Fabrique l'objet configure qui sera utilise par l'OpMode ou le follower.
     public static OTOSLocalizer.Config otos() {
         return new OTOSLocalizer.Config()
                 .withOffsetPose(new Pose(
@@ -207,10 +213,12 @@ public class SwerveAutonTuningConfig {
                 .withResetTracking(OTOS_RESET_TRACKING);
     }
 
+    // Section de logique dediee a cette responsabilite precise de la classe.
     public static Pose startingPose() {
         return new Pose(STARTING_X, STARTING_Y, Math.toRadians(STARTING_HEADING_DEGREES));
     }
 
+    // Fabrique l'objet configure qui sera utilise par l'OpMode ou le follower.
     public static SwerveDriveConfig swerveDrive() {
         double halfTrack = TRACK_WIDTH / 2.0;
         double halfWheelBase = WHEEL_BASE / 2.0;
@@ -232,6 +240,7 @@ public class SwerveAutonTuningConfig {
                 .withBrakeMode(BRAKE_MODE_ENABLED);
     }
 
+    // Fabrique l'objet configure qui sera utilise par l'OpMode ou le follower.
     public static MecanumDriveConfig mecanumDrive() {
         return new MecanumDriveConfig()
                 .withMotorNames(MECANUM_FRONT_LEFT, MECANUM_FRONT_RIGHT, MECANUM_BACK_LEFT, MECANUM_BACK_RIGHT)
@@ -251,6 +260,7 @@ public class SwerveAutonTuningConfig {
                 .withXLockDeadband(X_LOCK_DEADBAND);
     }
 
+    // Fabrique l'objet configure qui sera utilise par l'OpMode ou le follower.
     public static FollowerConfig follower() {
         return new FollowerConfig()
                 .withTranslationPidf(TRANSLATION_KP, TRANSLATION_KI, TRANSLATION_KD, TRANSLATION_KF)
@@ -287,6 +297,7 @@ public class SwerveAutonTuningConfig {
                 .withTurnReversed(turnReversedFor(turnServoName));
     }
 
+    // Convertit une intention de mouvement en commandes concretes pour le drivetrain.
     private static boolean driveReversedFor(String driveMotorName) {
         if (FRONT_LEFT_DRIVE.equals(driveMotorName)) {
             return FRONT_LEFT_DRIVE_REVERSED;
@@ -301,6 +312,7 @@ public class SwerveAutonTuningConfig {
         return false;
     }
 
+    // Section de logique dediee a cette responsabilite precise de la classe.
     private static boolean turnReversedFor(String turnServoName) {
         if (FRONT_LEFT_TURN.equals(turnServoName)) {
             return FRONT_LEFT_TURN_REVERSED;
@@ -315,6 +327,7 @@ public class SwerveAutonTuningConfig {
         return false;
     }
 
+    // Section de logique dediee a cette responsabilite precise de la classe.
     private static DcMotorSimple.Direction motorDirection(boolean reversed) {
         return reversed ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD;
     }

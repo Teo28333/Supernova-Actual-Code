@@ -8,6 +8,9 @@ import org.firstinspires.ftc.teamcode.localization.PinpointLocalizer;
 import org.firstinspires.ftc.teamcode.subsystems.swervedrive.SwerveDriveConfig;
 import org.firstinspires.ftc.teamcode.subsystems.swervedrive.SwerveModuleConfig;
 
+/**
+ * Documentation ajoutee: Configuration rapide du robot Supernova: Pinpoint, swerve et follower pour creer les objets principaux.
+ */
 @com.acmerobotics.dashboard.config.Config
 public class Config {
     public static String PINPOINT_NAME = "pinpoint";
@@ -80,9 +83,11 @@ public class Config {
     public static boolean CENTRIPETAL_CORRECTION_ENABLED = true;
     public static double CENTRIPETAL_CORRECTION_SCALE = 0.0;
 
+    // Construit cette classe avec les dependances et reglages necessaires.
     private Config() {
     }
 
+    // Fabrique l'objet configure qui sera utilise par l'OpMode ou le follower.
     public static SupernovaConfig robot() {
         return new SupernovaConfig()
                 .usePinpoint(PINPOINT_NAME, pinpoint())
@@ -90,6 +95,7 @@ public class Config {
                 .withFollowerConfig(follower());
     }
 
+    // Fabrique l'objet configure qui sera utilise par l'OpMode ou le follower.
     public static PinpointLocalizer.Config pinpoint() {
         PinpointLocalizer.Config config = new PinpointLocalizer.Config()
                 .withPodOffsets(PINPOINT_X_OFFSET_INCHES, PINPOINT_Y_OFFSET_INCHES, DistanceUnit.INCH)
@@ -107,6 +113,7 @@ public class Config {
         return config;
     }
 
+    // Section de logique dediee a cette responsabilite precise de la classe.
     public static SwerveDriveConfig coaxialSwerve() {
         double halfTrack = TRACK_WIDTH / 2.0;
         double halfWheelBase = WHEEL_BASE / 2.0;
@@ -132,6 +139,7 @@ public class Config {
                 .withBrakeMode(BRAKE_MODE_ENABLED);
     }
 
+    // Fabrique l'objet configure qui sera utilise par l'OpMode ou le follower.
     public static FollowerConfig follower() {
         return new FollowerConfig()
                 .withDrivePidf(TRANSLATIONAL_KP, TRANSLATIONAL_KI, TRANSLATIONAL_KD, TRANSLATIONAL_KF)

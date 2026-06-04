@@ -5,16 +5,21 @@ import org.firstinspires.ftc.teamcode.localization.PinpointLocalizer;
 import org.firstinspires.ftc.teamcode.subsystems.swervedrive.SwerveDriveConfig;
 import org.firstinspires.ftc.teamcode.subsystems.swervedrive.SwerveModuleConfig;
 
+/**
+ * Documentation ajoutee: Configuration TeleOp qui reutilise les reglages swerve et Pinpoint du tuning autonome.
+ */
 public class TeleOpSwerveConfig {
     public static final String PINPOINT_NAME = "pinpoint";
 
     public static final double TRACK_WIDTH = 13.0;
     public static final double WHEEL_BASE = 13.0;
 
+    // Fabrique l'objet configure qui sera utilise par l'OpMode ou le follower.
     public static PinpointLocalizer.Config pinpoint() {
         return SwerveAutonTuningConfig.pinpoint();
     }
 
+    // Fabrique l'objet configure qui sera utilise par l'OpMode ou le follower.
     public static SwerveDriveConfig swerveDrive() {
         return SwerveAutonTuningConfig.swerveDrive();
     }

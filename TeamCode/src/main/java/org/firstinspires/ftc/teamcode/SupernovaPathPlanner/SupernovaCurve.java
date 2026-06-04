@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.SupernovaPathPlanner;
 
 import com.qualcomm.robotcore.util.Range;
 
+/**
+ * Documentation ajoutee: Segment de trajectoire en courbe de Bezier cubique avec estimation de longueur.
+ */
 public class SupernovaCurve implements PathSegment {
     private static final int LENGTH_SAMPLES = 40;
 
@@ -11,6 +14,7 @@ public class SupernovaCurve implements PathSegment {
     private final Pose end;
     private final double length;
 
+    // Construit cette classe avec les dependances et reglages necessaires.
     public SupernovaCurve(Pose start, Pose controlOne, Pose controlTwo, Pose end) {
         this.start = start.copy();
         this.controlOne = controlOne.copy();
@@ -19,6 +23,7 @@ public class SupernovaCurve implements PathSegment {
         this.length = estimateLength();
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     @Override
     public Pose get(double t) {
         t = Range.clip(t, 0.0, 1.0);
@@ -42,6 +47,7 @@ public class SupernovaCurve implements PathSegment {
         );
     }
 
+    // Section de logique dediee a cette responsabilite precise de la classe.
     @Override
     public Pose derivative(double t) {
         t = Range.clip(t, 0.0, 1.0);
@@ -57,11 +63,13 @@ public class SupernovaCurve implements PathSegment {
         return new Pose(dx, dy, Pose.normalizeRadians(end.getHeading() - start.getHeading()));
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     @Override
     public double length() {
         return length;
     }
 
+    // Section de logique dediee a cette responsabilite precise de la classe.
     private double estimateLength() {
         double total = 0.0;
         Pose previous = get(0.0);

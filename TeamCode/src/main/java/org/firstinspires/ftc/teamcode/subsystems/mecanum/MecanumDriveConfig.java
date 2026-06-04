@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.subsystems.mecanum;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+/**
+ * Documentation ajoutee: Regroupe les noms de moteurs, directions et limites du drivetrain mecanum.
+ */
 public class MecanumDriveConfig {
     public String frontLeftMotorName = "frontLeft";
     public String frontRightMotorName = "frontRight";
@@ -45,51 +48,61 @@ public class MecanumDriveConfig {
         return this;
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public MecanumDriveConfig withZeroPowerBehavior(DcMotor.ZeroPowerBehavior zeroPowerBehavior) {
         this.zeroPowerBehavior = zeroPowerBehavior;
         return this;
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public MecanumDriveConfig withBrakeMode(boolean brakeModeEnabled) {
         zeroPowerBehavior = brakeModeEnabled ? DcMotor.ZeroPowerBehavior.BRAKE : DcMotor.ZeroPowerBehavior.FLOAT;
         return this;
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public MecanumDriveConfig withMaxPower(double maxPower) {
         this.maxPower = maxPower;
         return this;
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public MecanumDriveConfig withPredictiveBraking(boolean enabled) {
         predictiveBrakingEnabled = enabled;
         return this;
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public MecanumDriveConfig withMaxLinearDeceleration(double maxLinearDeceleration) {
         this.maxLinearDeceleration = maxLinearDeceleration;
         return this;
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public MecanumDriveConfig withMaxAngularDeceleration(double maxAngularDeceleration) {
         this.maxAngularDeceleration = maxAngularDeceleration;
         return this;
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public MecanumDriveConfig withBrakingDistanceBuffer(double brakingDistanceBuffer) {
         this.brakingDistanceBuffer = brakingDistanceBuffer;
         return this;
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public MecanumDriveConfig withMinimumBrakeScale(double minimumBrakeScale) {
         this.minimumBrakeScale = minimumBrakeScale;
         return this;
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public MecanumDriveConfig withXLock(boolean enabled) {
         xLockEnabled = enabled;
         return this;
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public MecanumDriveConfig withXLockDeadband(double xLockDeadband) {
         this.xLockDeadband = xLockDeadband;
         return this;

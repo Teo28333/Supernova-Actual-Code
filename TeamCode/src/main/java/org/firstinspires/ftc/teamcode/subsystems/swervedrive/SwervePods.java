@@ -9,6 +9,9 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.SupernovaPathPlanner.Pose;
 
+/**
+ * Documentation ajoutee: Controle un module swerve individuel: moteur de traction, servo de rotation et encodeur absolu.
+ */
 public class SwervePods {
     private static final double TWO_PI = 2.0 * Math.PI;
     private static final double DEFAULT_TURN_KP = 1.8;
@@ -39,6 +42,7 @@ public class SwervePods {
     private double lastDrivePower = 0.0;
     private double lastTurnPower = 0.0;
 
+    // Construit cette classe avec les dependances et reglages necessaires.
     public SwervePods(HardwareMap hwm, String motorName, String servoName, String encoderName,
                        double angleOffset, double minVoltage, double maxVoltage) {
         driveMotor = hwm.get(DcMotorEx.class, motorName);
@@ -53,35 +57,43 @@ public class SwervePods {
         driveMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public void setPodPose(Pose pose) {
         podPoseX = pose.getX();
         podPoseY = pose.getY();
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public Pose getPodPose() {
         return new Pose(podPoseX, podPoseY, 0.0);
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public double getPodPoseX() {
         return podPoseX;
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public double getPodPoseY() {
         return podPoseY;
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public void setAngleOffset(double angleOffset) {
         this.angleOffset = angleOffset;
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public void setTurnKp(double turnKp) {
         this.turnKp = turnKp;
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public void setTurnPid(double kP, double kI, double kD) {
         setTurnPidf(kP, kI, kD, turnKf);
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public void setTurnPidf(double kP, double kI, double kD, double kF) {
         this.turnKp = kP;
         this.turnKi = kI;
@@ -90,18 +102,22 @@ public class SwervePods {
         resetTurnController();
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public void setTurnKf(double turnKf) {
         this.turnKf = turnKf;
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public void setTurnToleranceRadians(double turnToleranceRadians) {
         this.turnToleranceRadians = Math.abs(turnToleranceRadians);
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public void setIntegralLimit(double integralLimit) {
         this.integralLimit = Math.abs(integralLimit);
     }
 
+    // Remet l'etat interne a une base propre pour eviter les anciennes erreurs accumulees.
     public void resetTurnController() {
         integralSum = 0.0;
         lastAngleError = 0.0;
@@ -109,18 +125,22 @@ public class SwervePods {
         lastTurnPower = 0.0;
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public void setDriveReversed(boolean reversed) {
         driveMotor.setDirection(reversed ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public void setDriveZeroPowerBehavior(DcMotor.ZeroPowerBehavior zeroPowerBehavior) {
         driveMotor.setZeroPowerBehavior(zeroPowerBehavior);
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public void setTurnReversed(boolean reversed) {
         turnMotor.setDirection(reversed ? CRServo.Direction.REVERSE : CRServo.Direction.FORWARD);
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public double getCurrentAngle() {
         double voltageRange = maxVoltage - minVoltage;
         if (voltageRange <= 0.0) {
@@ -136,26 +156,32 @@ public class SwervePods {
         return Pose.normalizeRadians((normalizedVoltage * TWO_PI) - angleOffset);
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public double getLastTargetAngle() {
         return lastTargetAngle;
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public double getLastDrivePower() {
         return lastDrivePower;
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public double getLastTurnPower() {
         return lastTurnPower;
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public double getLastAngleError() {
         return lastAngleError;
     }
 
+    // Convertit une intention de mouvement en commandes concretes pour le drivetrain.
     public void pointAt(double targetAngle) {
         setTargetState(0.0, targetAngle);
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public void setTargetState(double drivePower, double targetAngle) {
         double currentAngle = getCurrentAngle();
         double optimizedDrivePower = drivePower;
@@ -178,6 +204,7 @@ public class SwervePods {
         driveMotor.setPower(lastDrivePower);
     }
 
+    // Arrete proprement les moteurs et remet les commandes a zero.
     public void stop() {
         driveMotor.setPower(0.0);
         turnMotor.setPower(0.0);
@@ -185,6 +212,7 @@ public class SwervePods {
         resetTurnController();
     }
 
+    // Calcule une valeur intermediaire utilisee pour limiter ou corriger la commande.
     private double calculateTurnPower(double angleError) {
         long now = System.nanoTime();
 

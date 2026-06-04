@@ -10,12 +10,16 @@ import org.firstinspires.ftc.teamcode.config.TeleOpSwerveConfig;
 import org.firstinspires.ftc.teamcode.localization.PinpointLocalizer;
 import org.firstinspires.ftc.teamcode.subsystems.swervedrive.SwerveDrive;
 
+/**
+ * Documentation ajoutee: OpMode TeleOp pour conduire le robot en swerve avec les joysticks et afficher la position Pinpoint.
+ */
 @TeleOp(name = "Swerve TeleOp")
 @Disabled
 public class SwerveTeleOp extends OpMode {
     private PinpointLocalizer localizer;
     private SwerveDrive drive;
 
+    // Prepare le materiel et les sous-systemes avant le demarrage de l'OpMode.
     @Override
     public void init() {
         localizer = new PinpointLocalizer(hardwareMap, TeleOpSwerveConfig.PINPOINT_NAME);
@@ -23,6 +27,7 @@ public class SwerveTeleOp extends OpMode {
         drive = new SwerveDrive(hardwareMap, localizer, TeleOpSwerveConfig.swerveDrive());
     }
 
+    // Boucle principale executee en continu pendant l'OpMode.
     @Override
     public void loop() {
         double forward = -gamepad1.left_stick_y;
@@ -46,11 +51,13 @@ public class SwerveTeleOp extends OpMode {
         telemetry.addData("pinpoint", localizer.getDeviceStatus());
     }
 
+    // Arrete proprement les moteurs et remet les commandes a zero.
     @Override
     public void stop() {
         drive.stop();
     }
 
+    // Calcule une valeur intermediaire utilisee pour limiter ou corriger la commande.
     private static double applyDeadband(double value, double deadband) {
         if (Math.abs(value) < deadband) {
             return 0.0;

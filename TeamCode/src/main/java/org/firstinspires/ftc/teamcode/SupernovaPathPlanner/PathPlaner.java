@@ -5,6 +5,9 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.localization.Localizer;
 import org.firstinspires.ftc.teamcode.subsystems.swervedrive.SwerveDrive;
 
+/**
+ * Documentation ajoutee: Facade pratique pour creer un follower et construire des chemins a partir d'une configuration robot.
+ */
 public class PathPlaner {
     private static final int CLOSEST_POINT_SAMPLES = 80;
 
@@ -20,24 +23,29 @@ public class PathPlaner {
     private Pose driveCommand = new Pose();
     private boolean busy = false;
 
+    // Construit cette classe avec les dependances et reglages necessaires.
     public PathPlaner(SwerveDrive drive) {
         this.drive = drive;
         this.localizer = drive.getLocalizer();
     }
 
+    // Construit cette classe avec les dependances et reglages necessaires.
     public PathPlaner(SwerveDrive drive, Config config) {
         this(drive);
         this.config = config;
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public void setConfig(Config config) {
         this.config = config;
     }
 
+    // Ajoute ou lance une etape de trajectoire dans l'API de path planning.
     public void followPath(SupernovaPath path) {
         followPath(path, false);
     }
 
+    // Ajoute ou lance une etape de trajectoire dans l'API de path planning.
     public void followPath(SupernovaPath path, boolean resetPose) {
         if (path == null || path.size() == 0) {
             throw new IllegalArgumentException("Path must contain at least one segment.");
@@ -55,6 +63,7 @@ public class PathPlaner {
         }
     }
 
+    // Rafraichit les lectures, calcule les erreurs et met a jour l'etat interne.
     public void update() {
         localizer.update();
         pose = localizer.getPoseEstimate();
@@ -92,32 +101,39 @@ public class PathPlaner {
         drive.driveFieldCentric(driveCommand.getY(), driveCommand.getX(), driveCommand.getHeading());
     }
 
+    // Arrete proprement les moteurs et remet les commandes a zero.
     public void stop() {
         busy = false;
         driveCommand = new Pose();
         drive.stop();
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public boolean isBusy() {
         return busy;
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public Pose getTargetPose() {
         return targetPose.copy();
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public Pose getDriveCommand() {
         return driveCommand.copy();
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public int getSegmentIndex() {
         return segmentIndex;
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public double getSegmentT() {
         return segmentT;
     }
 
+    // Calcule une valeur intermediaire utilisee pour limiter ou corriger la commande.
     private Pose calculateDriveCommand(Pose currentPose, Pose lookaheadPose, Pose endPose, boolean atEndSegment) {
         Pose trackingPose = atEndSegment && currentPose.distanceTo(endPose) < config.finalApproachDistance
                 ? endPose
@@ -143,6 +159,7 @@ public class PathPlaner {
         );
     }
 
+    // Calcule une valeur intermediaire utilisee pour limiter ou corriger la commande.
     private static double findClosestT(PathSegment segment, Pose pose, double startT) {
         double bestT = Range.clip(startT, 0.0, 1.0);
         double bestDistance = Double.POSITIVE_INFINITY;
@@ -172,46 +189,55 @@ public class PathPlaner {
         public double headingTolerance = Math.toRadians(3.0);
         public double segmentAdvanceTolerance = 0.02;
 
+        // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
         public Config withTranslationKp(double translationKp) {
             this.translationKp = translationKp;
             return this;
         }
 
+        // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
         public Config withHeadingKp(double headingKp) {
             this.headingKp = headingKp;
             return this;
         }
 
+        // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
         public Config withMaxTranslationPower(double maxTranslationPower) {
             this.maxTranslationPower = maxTranslationPower;
             return this;
         }
 
+        // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
         public Config withMaxFinalTranslationPower(double maxFinalTranslationPower) {
             this.maxFinalTranslationPower = maxFinalTranslationPower;
             return this;
         }
 
+        // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
         public Config withMaxHeadingPower(double maxHeadingPower) {
             this.maxHeadingPower = maxHeadingPower;
             return this;
         }
 
+        // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
         public Config withLookaheadDistance(double lookaheadDistance) {
             this.lookaheadDistance = lookaheadDistance;
             return this;
         }
 
+        // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
         public Config withFinalApproachDistance(double finalApproachDistance) {
             this.finalApproachDistance = finalApproachDistance;
             return this;
         }
 
+        // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
         public Config withPositionTolerance(double positionTolerance) {
             this.positionTolerance = positionTolerance;
             return this;
         }
 
+        // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
         public Config withHeadingTolerance(double headingTolerance) {
             this.headingTolerance = headingTolerance;
             return this;

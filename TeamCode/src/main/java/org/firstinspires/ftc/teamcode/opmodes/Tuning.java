@@ -18,6 +18,9 @@ import org.firstinspires.ftc.teamcode.subsystems.mecanum.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.swervedrive.SwerveDrive;
 import org.firstinspires.ftc.teamcode.subsystems.swervedrive.SwervePods;
 
+/**
+ * Documentation ajoutee: OpMode de mise au point qui permet de tester le drivetrain, le localizer, les pods et le follower depuis le Dashboard.
+ */
 @TeleOp(name = "Tuning")
 public class Tuning extends OpMode {
     private Localizer localizer;
@@ -35,11 +38,13 @@ public class Tuning extends OpMode {
     private boolean previousLeftBumper;
     private boolean previousRightBumper;
 
+    // Prepare le materiel et les sous-systemes avant le demarrage de l'OpMode.
     @Override
     public void init() {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
 
+    // Met a jour les choix de tuning tant que le robot n'est pas encore lance.
     @Override
     public void init_loop() {
         updateInitSelection();
@@ -52,11 +57,13 @@ public class Tuning extends OpMode {
         telemetry.addLine("bumpers: drivetrain");
     }
 
+    // Construit la configuration selectionnee au moment ou l'OpMode demarre.
     @Override
     public void start() {
         buildSelectedRobot();
     }
 
+    // Boucle principale executee en continu pendant l'OpMode.
     @Override
     public void loop() {
         if (!initialized) {
@@ -94,6 +101,7 @@ public class Tuning extends OpMode {
         addTelemetry(pose);
     }
 
+    // Arrete proprement les moteurs et remet les commandes a zero.
     @Override
     public void stop() {
         if (drivetrain != null) {
@@ -101,6 +109,7 @@ public class Tuning extends OpMode {
         }
     }
 
+    // Section de logique dediee a cette responsabilite precise de la classe.
     private void buildSelectedRobot() {
         localizer = createLocalizer();
         setStartingPose();
@@ -123,6 +132,7 @@ public class Tuning extends OpMode {
         initialized = true;
     }
 
+    // Fabrique l'objet configure qui sera utilise par l'OpMode ou le follower.
     private Localizer createLocalizer() {
         switch (SwerveAutonTuningConfig.LOCALIZER) {
             case THREE_WHEEL:
@@ -139,6 +149,7 @@ public class Tuning extends OpMode {
         }
     }
 
+    // Calcule une valeur intermediaire utilisee pour limiter ou corriger la commande.
     private void applyLiveConfig() {
         if (swerveDrive != null) {
             swerveDrive.setConfig(SwerveAutonTuningConfig.swerveDrive());
@@ -162,6 +173,7 @@ public class Tuning extends OpMode {
         }
     }
 
+    // Convertit une intention de mouvement en commandes concretes pour le drivetrain.
     private void joystickDrive(Pose pose) {
         double scale = Range.clip(SwerveAutonTuningConfig.DRIVE_SCALE, 0.0, 1.0);
         Pose command = new Pose(
@@ -172,6 +184,7 @@ public class Tuning extends OpMode {
         drivetrain.driveFieldCentric(command, pose, localizer.getVelocity(), pose);
     }
 
+    // Convertit une intention de mouvement en commandes concretes pour le drivetrain.
     private void tunePodAngle() {
         if (swerveDrive == null) {
             drivetrain.stop();
@@ -192,6 +205,7 @@ public class Tuning extends OpMode {
         }
     }
 
+    // Convertit une intention de mouvement en commandes concretes pour le drivetrain.
     private void xLock() {
         if (swerveDrive != null && SwerveAutonTuningConfig.X_LOCK_ENABLED) {
             swerveDrive.xLock();
@@ -200,6 +214,7 @@ public class Tuning extends OpMode {
         }
     }
 
+    // Convertit une intention de mouvement en commandes concretes pour le drivetrain.
     private void followerHold() {
         Pose target = new Pose(
                 SwerveAutonTuningConfig.TARGET_X,
@@ -219,6 +234,7 @@ public class Tuning extends OpMode {
         follower.update();
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     private void setStartingPose() {
         localizer.setStartingPose(SwerveAutonTuningConfig.startingPose());
         if (follower != null) {
@@ -226,6 +242,7 @@ public class Tuning extends OpMode {
         }
     }
 
+    // Section de logique dediee a cette responsabilite precise de la classe.
     private void addTelemetry(Pose pose) {
         telemetry.addData("mode", SwerveAutonTuningConfig.MODE);
         telemetry.addData("drivetrain", SwerveAutonTuningConfig.DRIVETRAIN);
@@ -253,6 +270,7 @@ public class Tuning extends OpMode {
         }
     }
 
+    // Rafraichit les lectures, calcule les erreurs et met a jour l'etat interne.
     private void updateInitSelection() {
         if (pressed(gamepad1.dpad_up, previousDpadUp)) {
             SwerveAutonTuningConfig.MODE = previousEnum(
@@ -299,18 +317,22 @@ public class Tuning extends OpMode {
         previousRightBumper = gamepad1.right_bumper;
     }
 
+    // Section de logique dediee a cette responsabilite precise de la classe.
     private static boolean pressed(boolean current, boolean previous) {
         return current && !previous;
     }
 
+    // Section de logique dediee a cette responsabilite precise de la classe.
     private static <T extends Enum<T>> T nextEnum(T value, T[] values) {
         return values[(value.ordinal() + 1) % values.length];
     }
 
+    // Section de logique dediee a cette responsabilite precise de la classe.
     private static <T extends Enum<T>> T previousEnum(T value, T[] values) {
         return values[(value.ordinal() + values.length - 1) % values.length];
     }
 
+    // Calcule une valeur intermediaire utilisee pour limiter ou corriger la commande.
     private static double applyDeadband(double value, double deadband) {
         if (Math.abs(value) < deadband) {
             return 0.0;
@@ -319,6 +341,7 @@ public class Tuning extends OpMode {
         return Range.clip(value, -1.0, 1.0);
     }
 
+    // Section de logique dediee a cette responsabilite precise de la classe.
     private static String followerSignature() {
         return SwerveAutonTuningConfig.TRANSLATION_KP + ":"
                 + SwerveAutonTuningConfig.TRANSLATION_KI + ":"
@@ -335,6 +358,7 @@ public class Tuning extends OpMode {
                 + SwerveAutonTuningConfig.MAX_HEADING_POWER;
     }
 
+    // Section de logique dediee a cette responsabilite precise de la classe.
     private static String holdTargetSignature() {
         return SwerveAutonTuningConfig.TARGET_X + ":"
                 + SwerveAutonTuningConfig.TARGET_Y + ":"

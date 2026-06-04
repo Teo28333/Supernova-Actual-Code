@@ -7,6 +7,9 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.SupernovaPathPlanner.Pose;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.Drivetrain;
 
+/**
+ * Documentation ajoutee: Drivetrain mecanum qui transforme les commandes de translation/rotation en puissances moteur.
+ */
 public class MecanumDrive implements Drivetrain {
     private final DcMotorEx frontLeft;
     private final DcMotorEx frontRight;
@@ -14,6 +17,7 @@ public class MecanumDrive implements Drivetrain {
     private final DcMotorEx backRight;
     private MecanumDriveConfig config;
 
+    // Construit cette classe avec les dependances et reglages necessaires.
     public MecanumDrive(HardwareMap hardwareMap, MecanumDriveConfig config) {
         this(
                 hardwareMap.get(DcMotorEx.class, config.frontLeftMotorName),
@@ -24,6 +28,7 @@ public class MecanumDrive implements Drivetrain {
         );
     }
 
+    // Construit cette classe avec les dependances et reglages necessaires.
     public MecanumDrive(DcMotorEx frontLeft, DcMotorEx frontRight,
                         DcMotorEx backLeft, DcMotorEx backRight,
                         MecanumDriveConfig config) {
@@ -34,12 +39,14 @@ public class MecanumDrive implements Drivetrain {
         setConfig(config);
     }
 
+    // Convertit une intention de mouvement en commandes concretes pour le drivetrain.
     @Override
     public void driveFieldCentric(Pose driveCommand, Pose currentPose, Pose velocity, Pose targetPose) {
         Pose scaledCommand = applyPredictiveBraking(driveCommand, currentPose, velocity, targetPose);
         driveFieldCentric(scaledCommand, currentPose.getHeading());
     }
 
+    // Convertit une intention de mouvement en commandes concretes pour le drivetrain.
     public void driveFieldCentric(Pose driveCommand, double robotHeading) {
         double cos = Math.cos(robotHeading);
         double sin = Math.sin(robotHeading);
@@ -50,6 +57,7 @@ public class MecanumDrive implements Drivetrain {
         driveRobotCentric(robotForward, robotStrafe, driveCommand.getHeading());
     }
 
+    // Convertit une intention de mouvement en commandes concretes pour le drivetrain.
     public void driveRobotCentric(double forward, double strafe, double turn) {
         forward = Range.clip(forward, -1.0, 1.0);
         strafe = Range.clip(strafe, -1.0, 1.0);
@@ -77,6 +85,7 @@ public class MecanumDrive implements Drivetrain {
         backRight.setPower((backRightPower / maxMagnitude) * maxPower);
     }
 
+    // Arrete proprement les moteurs et remet les commandes a zero.
     @Override
     public void stop() {
         frontLeft.setPower(0.0);
@@ -85,6 +94,7 @@ public class MecanumDrive implements Drivetrain {
         backRight.setPower(0.0);
     }
 
+    // Applique un reglage et renvoie/met a jour l'objet pour la configuration du robot.
     public void setConfig(MecanumDriveConfig config) {
         this.config = config;
 
@@ -108,10 +118,12 @@ public class MecanumDrive implements Drivetrain {
         backRight.setMode(config.runMode);
     }
 
+    // Donne l'etat courant sans exposer directement les objets internes modifiables.
     public MecanumDriveConfig getConfig() {
         return config;
     }
 
+    // Calcule une valeur intermediaire utilisee pour limiter ou corriger la commande.
     public Pose applyPredictiveBraking(Pose driveCommand, Pose currentPose, Pose velocity, Pose targetPose) {
         if (config == null || !config.predictiveBrakingEnabled) {
             return driveCommand.copy();
@@ -134,6 +146,7 @@ public class MecanumDrive implements Drivetrain {
         );
     }
 
+    // Calcule une valeur intermediaire utilisee pour limiter ou corriger la commande.
     private double calculateBrakeScale(double remainingDistance, double stoppingDistance) {
         double brakingDistance = stoppingDistance + config.brakingDistanceBuffer;
 
@@ -144,6 +157,7 @@ public class MecanumDrive implements Drivetrain {
         return Range.clip(remainingDistance / brakingDistance, config.minimumBrakeScale, 1.0);
     }
 
+    // Calcule une valeur intermediaire utilisee pour limiter ou corriger la commande.
     private static double calculateStoppingDistance(double velocity, double maxDeceleration) {
         if (maxDeceleration <= 0.0) {
             return 0.0;
@@ -152,6 +166,7 @@ public class MecanumDrive implements Drivetrain {
         return (velocity * velocity) / (2.0 * maxDeceleration);
     }
 
+    // Section de logique dediee a cette responsabilite precise de la classe.
     private boolean shouldXLock(double forward, double strafe, double turn) {
         if (config == null || !config.xLockEnabled) {
             return false;
